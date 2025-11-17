@@ -1,25 +1,31 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import Header from './components/Header'
+import Hero from './components/Hero'
+import CourseList from './components/CourseList'
+import QuickCreate from './components/QuickCreate'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [refreshKey, setRefreshKey] = useState(0)
+  useEffect(() => {
+    const onCreated = () => setRefreshKey((k) => k + 1)
+    window.addEventListener('course-created', onCreated)
+    return () => window.removeEventListener('course-created', onCreated)
+  }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Vibe Coding Platform
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Your AI-powered development environment
-        </p>
-        <div className="text-center">
-          <button
-            onClick={() => setCount(count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            Count is {count}
-          </button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50">
+      <div className="max-w-6xl mx-auto px-4">
+        <Header />
+        <Hero />
+        <div className="grid lg:grid-cols-3 gap-6 items-start">
+          <div className="lg:col-span-2 space-y-4">
+            <CourseList key={refreshKey} />
+          </div>
+          <div>
+            <QuickCreate />
+          </div>
         </div>
+        <footer className="text-center text-sm text-gray-500 py-12">Built for consultants and clients</footer>
       </div>
     </div>
   )
